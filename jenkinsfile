@@ -1,0 +1,39 @@
+pipeline{
+   agent any
+   tools{
+      maven 'maven_devops'
+   }
+   triggers{
+      githubPush()
+   }
+   environment{
+        POM="CalculadoraBasica1/pom.xml"
+   }
+   stages{
+      stage('Descarga'){
+         steps{
+            git url:'https://github.com/David12Salas/CalculadoraBasica1.git', branch:'main'
+         }
+      }
+      stage('Compilacion'){
+        steps{
+            sh 'mvn -f $POM -B package'
+        }
+      }
+      stage('Prueba'){
+        steps{
+            sh 'mvn -f $POM test'
+        }
+        post{
+            always{
+                junit 'CalculadoraBasica1/target/surefire-reports/*.xml'
+            }
+        }
+      }
+      stage('Empaquetado'){
+        steps{
+            archiveArtifacts artifacts: 'CalculadoraBasica1/target/*.jar', fingerprint:true
+        }
+      }  
+   }
+}
