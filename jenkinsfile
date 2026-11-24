@@ -7,7 +7,7 @@ pipeline{
       githubPush()
    }
    environment{
-        POM="CalculadoraBasica1/pom.xml"
+        POM="CalculadoraBasica/pom.xml"
    }
    stages{
       stage('Descarga'){
@@ -26,13 +26,13 @@ pipeline{
         }
         post{
             always{
-                junit 'CalculadoraBasica1/target/surefire-reports/*.xml'
+                junit 'CalculadoraBasica/target/surefire-reports/*.xml'
             }
         }
       }
       stage('Empaquetado'){
         steps{
-            archiveArtifacts artifacts: 'CalculadoraBasica1/target/*.jar', fingerprint:true
+            archiveArtifacts artifacts: 'CalculadoraBasica/target/*.jar', fingerprint:true
         }
       }  
    }
